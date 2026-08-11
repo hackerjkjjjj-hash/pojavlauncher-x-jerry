@@ -21,20 +21,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Download and Extract JRE 17 into Assets
+      - name: Embed and Structure JRE 17 into Assets
         run: |
-          # បង្កើត folder សម្រាប់ទុក JRE 17
-          mkdir -p app_pojavlauncher/src/main/assets/components/jre-new
-          cd app_pojavlauncher/src/main/assets/components/jre-new
+          # បង្កើត Directory structure ឱ្យត្រូវតាម PojavLauncher
+          JRE_DIR="app_pojavlauncher/src/main/assets/components/jre-new/jre17-pojav"
+          mkdir -p "$JRE_DIR"
           
-          # Download file JRE 17
-          wget https://github.com/PojavLauncherTeam/android-openjdk-build-multiarch/releases/download/jre17-pojav/jre17-pojav.tar.xz
+          # Copy Java 17 ចូល
+          cp -r $JAVA_HOME/* "$JRE_DIR/"
           
-          # ពន្លាត File .tar.xz ឱ្យចេញជា Folder Java
-          tar -xf jre17-pojav.tar.xz
-          
-          # លុប File បង្អាប់ចោល ដើម្បីកាត់បន្ថយទំហំ APK
-          rm jre17-pojav.tar.xz
+          # បង្កើត Manifest File ដើម្បីឱ្យ App ស្គាល់ Component នេះស្វ័យប្រវត្តិ
+          echo "jre17-pojav" > app_pojavlauncher/src/main/assets/components/jre-new/component_manifest.txt
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -47,4 +44,3 @@ jobs:
         with:
           name: PojavLauncher-APK
           path: app_pojavlauncher/build/outputs/apk/debug/*.apk
-          
